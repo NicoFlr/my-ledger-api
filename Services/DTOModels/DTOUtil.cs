@@ -28,6 +28,16 @@ namespace Services.DTOModels
             categoryDTO.Id = category.Id;
             categoryDTO.Name = category.Name;
 
+            return categoryDTO;
+        }
+
+        public static CategoryDTO MapCategoryToDTOWithTransactions(Category category)
+        {
+            CategoryDTO categoryDTO = new CategoryDTO();
+
+            categoryDTO.Id = category.Id;
+            categoryDTO.Name = category.Name;
+
             if (category.Transactions != null)
             {
                 categoryDTO.Transactions = MapTransactionToDTOList(category.Transactions.ToList());

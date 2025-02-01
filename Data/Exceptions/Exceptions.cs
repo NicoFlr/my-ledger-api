@@ -38,4 +38,9 @@ namespace Data.Exceptions
     {
         public BadRequestException(string message) : base(message) { }
     }
+
+    public class UnprocessableContentException : Exception
+    {
+        public UnprocessableContentException(string message) : base(message) { }
+    }
 }

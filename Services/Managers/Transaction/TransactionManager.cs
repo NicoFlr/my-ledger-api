@@ -1,5 +1,6 @@
 ﻿using Data.Exceptions;
 using Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Services.DTOModels;
 using Services.Managers.Transaction;
 using System;
@@ -40,7 +41,7 @@ namespace Services.Managers.Transaction
         {
             try
             {
-                Data.Models.Transaction? transaction = _unitOfWork.GetContext().Transactions.Where(a => a.Id == Id).FirstOrDefault();
+                Data.Models.Transaction? transaction = _unitOfWork.GetContext().Transactions.Include(t=>t.Category).Where(a => a.Id == Id).FirstOrDefault();
                 if (transaction != null)
                 {
                     TransactionDTO transactionDTO = DTOUtil.MapTransactionToDTO(transaction);
@@ -62,7 +63,7 @@ namespace Services.Managers.Transaction
             try
             {
                 List<TransactionDTO> transactionsDTOList = new List<TransactionDTO>();
-                List<Data.Models.Transaction> transactionList = _unitOfWork.GetContext().Transactions.ToList();
+                List<Data.Models.Transaction> transactionList = _unitOfWork.GetContext().Transactions.Include(t => t.Category).ToList();
                 transactionsDTOList = DTOUtil.MapTransactionToDTOList(transactionList);
                 return transactionsDTOList;
             }

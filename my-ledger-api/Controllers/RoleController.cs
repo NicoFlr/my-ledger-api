@@ -25,6 +25,18 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample response:
         ///
+        ///     [
+        ///       {
+        ///         "id": "b7a7c3d9-755e-4018-921e-1da37fa173ec",
+        ///         "name": "User",
+        ///         "users": null
+        ///       },
+        ///       {
+        ///         "id": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///         "name": "Administrator",
+        ///         "users": null
+        ///       }
+        ///     ]
         /// </remarks>
         /// <response code="200">All Roles were returned succesfully</response>
         /// <response code="500">No Roles were found</response>
@@ -40,6 +52,11 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample response:
         /// 
+        ///     {
+        ///        "id": "b7a7c3d9-755e-4018-921e-1da37fa173ec",
+        ///        "name": "User",
+        ///        "users": null
+        ///     }
         /// </remarks>
         /// <param name="id"></param>
         /// <response code="200">The Role was returned succesfully</response>
@@ -57,6 +74,9 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample request:
         ///
+        ///     {
+        ///        "name": "Supervisor"
+        ///     }
         /// </remarks>
         /// <param name="Role"></param>
         /// <response code="200">The Role was created succesfully</response>
@@ -74,6 +94,9 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample request:
         ///
+        ///     {
+        ///        "name": "User"
+        ///     }
         /// </remarks>
         /// <param name="Role"></param>
         /// <param name="id"></param>

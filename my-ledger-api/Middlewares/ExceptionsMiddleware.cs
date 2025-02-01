@@ -52,6 +52,9 @@ namespace Presentation.Middlewares
                 case BadRequestException:
                     errorCode = (int)HttpStatusCode.BadRequest;
                     break;
+                case UnprocessableContentException:
+                    errorCode = (int)HttpStatusCode.UnprocessableContent;
+                    break;
             }
 
             return errorCode;

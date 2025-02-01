@@ -24,7 +24,19 @@ namespace Presentation.Controllers
         /// </summary>
         /// <remarks>
         /// Sample response:
-        ///
+        /// 
+        ///     [
+        ///       {
+        ///         "id": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///         "name": "Transport",
+        ///         "transactions": []
+        ///       },
+        ///       {
+        ///         "id": "0beb373e-c5dc-4420-b0e0-152c70b90661",
+        ///         "name": "Food",
+        ///         "transactions": []
+        ///       }
+        ///     ]
         /// </remarks>
         /// <response code="200">All Categories were returned succesfully</response>
         /// <response code="500">No Categories were found</response>
@@ -40,6 +52,11 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample response:
         /// 
+        ///     {
+        ///       "id": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///       "name": "Transport",
+        ///       "transactions": []
+        ///     }
         /// </remarks>
         /// <param name="id"></param>
         /// <response code="200">The Category was returned succesfully</response>
@@ -56,7 +73,10 @@ namespace Presentation.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
+        /// 
+        ///     {
+        ///       "name": "Food"
+        ///     }
         /// </remarks>
         /// <param name="Category"></param>
         /// <response code="200">The Category was created succesfully</response>
@@ -73,7 +93,10 @@ namespace Presentation.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
+        /// 
+        ///     {
+        ///       "name": "Food"
+        ///     }
         /// </remarks>
         /// <param name="Category"></param>
         /// <param name="id"></param>
@@ -92,7 +115,12 @@ namespace Presentation.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
+        /// 
+        ///     {
+        ///       "id": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///       "name": "Transport",
+        ///       "transactions": []
+        ///     }
         /// </remarks>
         /// <param name="id"></param>
         /// <response code="200">The Category was deleted succesfully</response>

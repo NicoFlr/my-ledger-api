@@ -62,14 +62,14 @@ namespace Services.Managers.Category
         {
             try
             {
-                List<CategoryDTO> categorysDTOList = new List<CategoryDTO>();
+                List<CategoryDTO> categoriesDTOList = new List<CategoryDTO>();
                 List<Data.Models.Category> categoryList = _unitOfWork.GetContext().Categories.ToList();
-                categorysDTOList = DTOUtil.MapCategoryToDTOList(categoryList);
-                return categorysDTOList;
+                categoriesDTOList = DTOUtil.MapCategoryToDTOList(categoryList);
+                return categoriesDTOList;
             }
             catch (SystemException)
             {
-                throw new UnexpectedError("Couldnt retrieve categorys list.");
+                throw new UnexpectedError("Couldnt retrieve categories list.");
             }
         }
 

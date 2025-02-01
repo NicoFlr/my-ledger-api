@@ -25,6 +25,34 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample response:
         ///
+        ///     [
+        ///       {
+        ///         "id": "ce41629a-bd68-48d5-8238-3989f6b6e3c8",
+        ///         "money": 55,
+        ///         "dateTime": "2025-01-20T10:04:52.287-04:00",
+        ///         "isBill": false,
+        ///         "categoryId": "799b89f8-bf63-48ae-9221-2252ce4b54cb",
+        ///         "category": {
+        ///             "id": "799b89f8-bf63-48ae-9221-2252ce4b54cb",
+        ///             "name": "Work",
+        ///             "transactions": null
+        ///         },
+        ///         "users": []
+        ///       },
+        ///       {
+        ///         "id": "10c15097-d8d5-4c2d-a544-c163fc785b86",
+        ///         "money": 0.5,
+        ///         "dateTime": "2025-01-22T11:36:41.468-04:00",
+        ///         "isBill": true,
+        ///         "categoryId": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///         "category": {
+        ///             "id": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///             "name": "Transport",
+        ///             "transactions": null
+        ///         },
+        ///         "users": []
+        ///       }
+        ///     ]
         /// </remarks>
         /// <response code="200">All Transactions were returned succesfully</response>
         /// <response code="500">No Transactions were found</response>
@@ -39,7 +67,19 @@ namespace Presentation.Controllers
         /// </summary>
         /// <remarks>
         /// Sample response:
-        /// 
+        ///     {
+        ///       "id": "10c15097-d8d5-4c2d-a544-c163fc785b86",
+        ///       "money": 0.5,
+        ///       "dateTime": "2025-01-22T11:36:41.468-04:00",
+        ///       "isBill": true,
+        ///       "categoryId": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///       "category": {
+        ///           "id": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///           "name": "Transport",
+        ///           "transactions": null
+        ///       },
+        ///       "users": []
+        ///     }
         /// </remarks>
         /// <param name="id"></param>
         /// <response code="200">The Transaction was returned succesfully</response>
@@ -56,7 +96,13 @@ namespace Presentation.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
+        /// 
+        ///     {
+        ///        "money": 0.5,
+        ///        "dateTime": "2025-01-22T11:36:41.468-04:00",
+        ///        "isBill": true,
+        ///        "categoryId": "85ab9918-007b-4804-aeef-0e7f99d54a4c"
+        ///     }
         /// </remarks>
         /// <param name="Transaction"></param>
         /// <response code="200">The Transaction was created succesfully</response>
@@ -73,6 +119,12 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample request:
         ///
+        ///     {
+        ///       "money": 0.5,
+        ///       "dateTime": "2025-01-22T11:36:41.468-04:00",
+        ///       "isBill": true,
+        ///       "categoryId": "85ab9918-007b-4804-aeef-0e7f99d54a4c"
+        ///     }
         /// </remarks>
         /// <param name="Transaction"></param>
         /// <param name="id"></param>
@@ -90,7 +142,20 @@ namespace Presentation.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
+        ///       
+        ///     {
+        ///       "id": "10c15097-d8d5-4c2d-a544-c163fc785b86",
+        ///       "money": 0.5,
+        ///       "dateTime": "2025-01-22T11:36:41.468-04:00",
+        ///       "isBill": true,
+        ///       "categoryId": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///       "category": {
+        ///           "id": "85ab9918-007b-4804-aeef-0e7f99d54a4c",
+        ///           "name": "Transport",
+        ///           "transactions": null
+        ///       },
+        ///       "users": []
+        ///     }
         /// </remarks>
         /// <param name="id"></param>
         /// <response code="200">The Transaction was deleted succesfully</response>

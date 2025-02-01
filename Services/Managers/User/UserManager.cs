@@ -32,6 +32,9 @@ namespace Services.Managers.User
             {
                 Data.Models.User user = new Data.Models.User();
                 user = DTOUtil.MapUserDTO(newUser);
+                user.Password = HashPassword(user.Password, out var salt);
+                string saltString = Convert.ToHexString(salt);
+                user.Password = user.Password + "|" + saltString;
                 _unitOfWork.UserRepository.Add(user);
                 _unitOfWork.Save();
                 UserDTO userDTO = DTOUtil.MapUserToDTO(user);
@@ -41,6 +44,22 @@ namespace Services.Managers.User
             {
                 throw new NoContentException("User with specified Id was not found.");
             }
+        }
+
+        private string HashPassword(string password, out byte[] salt)
+        {
+            HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+            int keySize = int.Parse(_configuration["SecretSettings:KeySize"]);
+            int iterations = int.Parse(_configuration["SecretSettings:Iterations"]);
+
+            salt = RandomNumberGenerator.GetBytes(keySize);
+            var hash = Rfc2898DeriveBytes.Pbkdf2(
+                Encoding.UTF8.GetBytes(password),
+                salt,
+                iterations,
+                hashAlgorithm,
+                keySize);
+            return Convert.ToHexString(hash);
         }
 
         public UserDTO Get(Guid Id)
@@ -104,6 +123,68 @@ namespace Services.Managers.User
             {
                 throw new UnexpectedError("The user with the specified Id couldnt be updated.");
             }
+        }
+
+        public UserDTO UpdatePassword(Guid id, UserUpdatePasswordDTO userUpdatePasswordDTO)
+        {
+            try
+            {
+                Data.Models.User? foundUser = _unitOfWork.GetContext().Users.Where(a => a.Id == id).FirstOrDefault();
+                if (foundUser != null)
+                {
+                    _unitOfWork.UserRepository.Detach(foundUser);
+
+                    foundUser = UpdateUserPassword(foundUser, userUpdatePasswordDTO);
+                    _unitOfWork.UserRepository.Update(foundUser);
+                    _unitOfWork.Save();
+
+                    UserDTO userDTO = DTOUtil.MapUserToDTO(foundUser);
+                    return userDTO;
+                }
+                else
+                {
+                    throw new EntityNotFoundError("User's password could not be updated because user wasn't found.");
+                }
+            }
+            catch (SystemException)
+            {
+                throw new UnexpectedError("Unexpected error. The user with the specified Id couldnt be updated.");
+            }
+        }
+
+        private Data.Models.User UpdateUserPassword(Data.Models.User foundUser, UserUpdatePasswordDTO userUpdatePasswordDTO)
+        {
+            if (foundUser.IsDeleted == true)
+            {
+                throw new EntityNotFoundError("User with specified Id was not found.");
+            }
+
+            string[] foundUserCredential = foundUser.Password.Split(new[] { '|' }, 2);
+            string foundUserPassword = foundUserCredential[0];
+            string foundUserPasswordSalt = foundUserCredential[1];
+
+            bool isNewPasswordTheSame = VerifyPassword(userUpdatePasswordDTO.NewPassword, foundUserPassword, Convert.FromHexString(foundUserPasswordSalt));
+            bool iscurrentPasswordValid = VerifyPassword(userUpdatePasswordDTO.CurrentPassword, foundUserPassword, Convert.FromHexString(foundUserPasswordSalt));
+
+            if (iscurrentPasswordValid)
+            {
+                if (!isNewPasswordTheSame)
+                {
+                    foundUser.Password = HashPassword(userUpdatePasswordDTO.NewPassword, out var salt);
+                    string saltString = Convert.ToHexString(salt);
+                    foundUser.Password = foundUser.Password + "|" + saltString;
+                }
+                else
+                {
+                    throw new UnprocessableContentException("New password cannot be the same as the previous one");
+                }
+            }
+            else
+            {
+                throw new BadRequestException("Current password is incorrect");
+            }
+
+            return foundUser;
         }
 
         public UserDTO SoftDelete(Guid id)

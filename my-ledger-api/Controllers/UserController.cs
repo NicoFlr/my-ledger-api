@@ -24,6 +24,23 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample response:
         ///
+        ///     [
+        ///       {
+        ///         "id": "42581618-6f25-45d9-8d5b-40af9be6278b",
+        ///         "firstName": "Julio Nicolas",
+        ///         "lastName": "Flores Rojas",
+        ///         "email": "nico_fr1110@hotmail.com",
+        ///         "password": null,
+        ///         "roleId": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///         "isDeleted": false,
+        ///         "role": {
+        ///           "id": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///           "name": "Administrator",
+        ///           "users": null
+        ///         },
+        ///         "transactions": []
+        ///       }
+        ///     ]
         /// </remarks>
         /// <response code="200">All Users were returned succesfully</response>
         /// <response code="500">No Users were found</response>
@@ -40,6 +57,21 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample response:
         /// 
+        ///     {
+        ///        "id": "42581618-6f25-45d9-8d5b-40af9be6278b",
+        ///        "firstName": "Julio Nicolas",
+        ///        "lastName": "Flores Rojas",
+        ///        "email": "nico_fr1110@hotmail.com",
+        ///        "password": null,
+        ///        "roleId": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///        "isDeleted": false,
+        ///        "role": {
+        ///          "id": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///          "name": "Administrator",
+        ///          "users": null
+        ///        },
+        ///        "transactions": []
+        ///     }
         /// </remarks>
         /// <param name="id"></param>
         /// <response code="200">The User was returned succesfully</response>
@@ -57,6 +89,15 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample request:
         ///
+        ///     {
+        ///       "firstName": "Julio Nicolas",
+        ///       "lastName": "Flores Rojas",
+        ///       "email": "nico_fr1110@hotmail.com",
+        ///       "password": "password123",
+        ///       "roleId": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///       "isDeleted": false,
+        ///       "transactions": []
+        ///     }
         /// </remarks>
         /// <param name="User"></param>
         /// <response code="200">The User was created succesfully</response>
@@ -74,6 +115,19 @@ namespace Presentation.Controllers
         /// <remarks>
         /// Sample request:
         ///
+        ///     {
+        ///       "firstName": "Julio Nicolas",
+        ///       "lastName": "Flores Rojas",
+        ///       "email": "nico_fr1110@hotmail.com",
+        ///       "roleId": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///       "isDeleted": false,
+        ///       "role": {
+        ///         "id": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///         "name": "Administrator",
+        ///         "users": null
+        ///       },
+        ///       "transactions": []
+        ///     }
         /// </remarks>
         /// <param name="User"></param>
         /// <param name="id"></param>
@@ -88,11 +142,50 @@ namespace Presentation.Controllers
         }
 
         /// <summary>
-        /// Soft Deletes a User by Id
+        /// Update a User's password by Id
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
+        ///     {
+        ///         "CurrentPassword": "password123",
+        ///         "NewPassword": "Pr0m3th3u$$"
+        ///     }
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="pwdUpdate"></param>
+        /// <response code="200">The User's password was updated successfully</response>
+        /// <response code="404">User's password could not be updated because user wasn't found</response>
+        /// <response code="400">Current password is incorrect</response>
+        /// <response code="422">New password cannot be the same as the previous one</response>
+        [HttpPut]
+        [Route("{id}/password")]
+        public UserDTO UpdateUsersPassword(Guid id, UserUpdatePasswordDTO pwdUpdate)
+        {
+            return _userManager.UpdatePassword(id, pwdUpdate);
+        }
+
+        /// <summary>
+        /// Soft Deletes a User by Id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///  
+        ///     {
+        ///        "id": "42581618-6f25-45d9-8d5b-40af9be6278b",
+        ///        "firstName": "Julio Nicolas",
+        ///        "lastName": "Flores Rojas",
+        ///        "email": "nico_fr1110@hotmail.com",
+        ///        "password": null,
+        ///        "roleId": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///        "isDeleted": false,
+        ///        "role": {
+        ///          "id": "e0b5d470-e47e-4c7e-aaa8-b7c8cbebc4a2",
+        ///          "name": "Administrator",
+        ///          "users": null
+        ///        },
+        ///        "transactions": []
+        ///     }
         /// </remarks>
         /// <param name="id"></param>
         /// <response code="200">The User was deleted succesfully</response>
