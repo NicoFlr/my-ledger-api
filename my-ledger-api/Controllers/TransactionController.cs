@@ -4,6 +4,7 @@ using Services.Managers.User;
 using System.Collections.Generic;
 using System;
 using Services.Managers.Transaction;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {

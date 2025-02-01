@@ -4,6 +4,7 @@ using Services.Managers.Category;
 using System.Collections.Generic;
 using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
@@ -60,6 +61,7 @@ namespace Presentation.Controllers
         /// <param name="Category"></param>
         /// <response code="200">The Category was created succesfully</response>
         /// <response code="500">Category could not be created</response>
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public CategoryDTO CreateCategory(CategoryDTO Category)
         {
@@ -77,6 +79,7 @@ namespace Presentation.Controllers
         /// <param name="id"></param>
         /// <response code="200">The Category was updated succesfully</response>
         /// <response code="500">Category could not be updated</response>
+        [Authorize(Roles = "Administrator")]
         [HttpPut]
         [Route("{id}")]
         public CategoryDTO UpdateCategory(CategoryDTO Category, Guid id)
@@ -94,6 +97,7 @@ namespace Presentation.Controllers
         /// <param name="id"></param>
         /// <response code="200">The Category was deleted succesfully</response>
         /// <response code="500">Category could not be deleted</response>
+        [Authorize(Roles = "Administrator")]
         [HttpDelete]
         [Route("{id}")]
         public CategoryDTO DeleteCategory(Guid id)

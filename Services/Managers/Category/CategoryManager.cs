@@ -63,7 +63,7 @@ namespace Services.Managers.Category
             try
             {
                 List<CategoryDTO> categorysDTOList = new List<CategoryDTO>();
-                List<Data.Models.Category> categoryList = _unitOfWork.GetContext().Categories.Where(a => a.Id != null).ToList();
+                List<Data.Models.Category> categoryList = _unitOfWork.GetContext().Categories.ToList();
                 categorysDTOList = DTOUtil.MapCategoryToDTOList(categoryList);
                 return categorysDTOList;
             }

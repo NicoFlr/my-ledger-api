@@ -2,18 +2,28 @@
 using Data.Models;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Services.DTOModels;
 using Services.Managers.User;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Services.Managers.User
 {
     public class UserManager : IUserManager
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
 
-        public UserManager(UnitOfWork unitOfWork)
+        const string BASIC_AUTHORIZATION_SCHEME = "Basic";
+
+        public UserManager(UnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
+            _configuration = configuration;
         }
 
         public UserDTO Create(UserDTO newUser)
@@ -118,6 +128,78 @@ namespace Services.Managers.User
             {
                 throw new UnexpectedError("The user with the specified Id couldnt be deleted.");
             }
+        }
+
+        public string Login(string auth)
+        {
+            try
+            {
+                string[] decodeCredentials = DecodeCredentials(auth);
+                var email = decodeCredentials[0];
+                var password = decodeCredentials[1];
+
+                Data.Models.User? user = _unitOfWork.GetContext().Users.Include(u => u.Role).Where(user => user.Email.Equals(email)).FirstOrDefault();
+                if (user != null)
+                {
+                    string[] userCredential = user.Password.Split(new[] { '|' }, 2);
+                    string userPassword = userCredential[0];
+                    string userPasswordSalt = userCredential[1];
+
+                    if (!VerifyPassword(password, userPassword, Convert.FromHexString(userPasswordSalt)))
+                    {
+                        throw new UserAuthorizationException("Unauthorized user.");
+                    }
+
+                    var claims = new List<Claim>()
+                    {
+                        new Claim("firstName",user.FirstName),
+                        new Claim("lastName",user.LastName),
+                        new Claim("email", user.Email),
+                        new Claim("roleId", user.RoleId.ToString()),
+                        new Claim("userId",user.Id.ToString()),
+                        new Claim(ClaimTypes.Role,user.Role.Name),
+                    };
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Key"]));
+                    var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                    var header = new JwtHeader(signingCredentials);
+                    var payload = new JwtPayload
+                    (
+                        _configuration["AuthSettings:Audience"],
+                        _configuration["AuthSettings:Issuer"],
+                        claims,
+                        DateTime.Now,
+                        DateTime.UtcNow.AddMinutes(double.Parse(_configuration["AuthSettings:AccessExpireMinutes"]))
+                    );
+                    var token = new JwtSecurityToken(header, payload);
+                    return new JwtSecurityTokenHandler().WriteToken(token);
+                }
+                else
+                {
+                    throw new UserAuthorizationException("Unauthorized user");
+                }
+            }
+            catch (SystemException)
+            {
+                throw new UserAuthorizationException("Unauthorized user");
+            }
+        }
+
+        private bool VerifyPassword(string password, string hash, byte[] salt)
+        {
+            HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+            int keySize = int.Parse(_configuration["SecretSettings:KeySize"]);
+            int iterations = int.Parse(_configuration["SecretSettings:Iterations"]);
+
+            var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashAlgorithm, keySize);
+            return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromHexString(hash));
+        }
+
+        private static string[] DecodeCredentials(string auth)
+        {
+            auth = auth.Substring(BASIC_AUTHORIZATION_SCHEME.Length).Trim();
+            byte[] data = System.Convert.FromBase64String(auth);
+            string[] decodeCredentials = System.Text.ASCIIEncoding.ASCII.GetString(data).Split(new[] { ':' }, 2);
+            return decodeCredentials;
         }
     }
 }

@@ -3,6 +3,7 @@ using Services.DTOModels;
 using Services.Managers.User;
 using System.Collections.Generic;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
@@ -26,6 +27,7 @@ namespace Presentation.Controllers
         /// </remarks>
         /// <response code="200">All Users were returned succesfully</response>
         /// <response code="500">No Users were found</response>
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public List<UserDTO> getAllUsers()
         {
@@ -59,6 +61,7 @@ namespace Presentation.Controllers
         /// <param name="User"></param>
         /// <response code="200">The User was created succesfully</response>
         /// <response code="500">User could not be created</response>
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public UserDTO CreateUser(UserDTO User)
         {
@@ -76,6 +79,7 @@ namespace Presentation.Controllers
         /// <param name="id"></param>
         /// <response code="200">The User was updated succesfully</response>
         /// <response code="500">User could not be updated</response>
+        [Authorize(Roles = "Administrator")]
         [HttpPut]
         [Route("{id}")]
         public UserDTO UpdateUser(UserDTO User, Guid id)
@@ -93,11 +97,29 @@ namespace Presentation.Controllers
         /// <param name="id"></param>
         /// <response code="200">The User was deleted succesfully</response>
         /// <response code="500">User could not be deleted</response>
+        [Authorize(Roles = "Administrator")]
         [HttpDelete]
         [Route("{id}")]
         public UserDTO SoftDeleteUser(Guid id)
         {
             return _userManager.SoftDelete(id);
+        }
+
+        /// <summary>
+        /// Logs in a user
+        /// </summary>
+        /// <response code="200">The User was logged in successfully</response>
+        /// <response code="404">User was not found</response>
+        /// <response code="401">Unauthorized user</response>
+        [HttpPost]
+        [Route("login")]
+        [AllowAnonymous]
+        public IActionResult Login([FromHeader] string auth)
+        {
+            string token = _userManager.Login(auth);
+            token = "Bearer " + token;
+            Response.Headers.Add("Authorization", token);
+            return Ok();
         }
     }
 }

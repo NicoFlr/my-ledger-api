@@ -185,7 +185,6 @@ namespace Services.DTOModels
             user.FirstName = userDTO.FirstName;
             user.LastName = userDTO.LastName;
             user.Email = userDTO.Email;
-            user.Password = userDTO.Password;
             user.RoleId = userDTO.RoleId;
             user.IsDeleted = userDTO.IsDeleted;
 
@@ -200,7 +199,6 @@ namespace Services.DTOModels
             userDTO.FirstName = user.FirstName;
             userDTO.LastName = user.LastName;
             userDTO.Email = user.Email;
-            userDTO.Password = user.Password;
             userDTO.RoleId = user.RoleId;
             userDTO.IsDeleted = user.IsDeleted;
 

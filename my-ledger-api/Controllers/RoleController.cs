@@ -4,6 +4,7 @@ using Services.Managers.User;
 using System.Collections.Generic;
 using System;
 using Services.Managers.Role;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
@@ -60,6 +61,7 @@ namespace Presentation.Controllers
         /// <param name="Role"></param>
         /// <response code="200">The Role was created succesfully</response>
         /// <response code="500">Role could not be created</response>
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public RoleDTO CreateRole(RoleDTO Role)
         {
@@ -77,6 +79,7 @@ namespace Presentation.Controllers
         /// <param name="id"></param>
         /// <response code="200">The Role was updated succesfully</response>
         /// <response code="500">Role could not be updated</response>
+        [Authorize(Roles = "Administrator")]
         [HttpPut]
         [Route("{id}")]
         public RoleDTO UpdateRole(RoleDTO Role, Guid id)

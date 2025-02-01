@@ -63,7 +63,7 @@ namespace Services.Managers.Role
             try
             {
                 List<RoleDTO> rolesDTOList = new List<RoleDTO>();
-                List<Data.Models.Role> roleList = _unitOfWork.GetContext().Roles.Where(a => a.Id != null).ToList();
+                List<Data.Models.Role> roleList = _unitOfWork.GetContext().Roles.ToList();
                 rolesDTOList = DTOUtil.MapRoleToDTOList(roleList);
                 return rolesDTOList;
             }

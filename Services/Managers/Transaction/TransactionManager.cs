@@ -62,7 +62,7 @@ namespace Services.Managers.Transaction
             try
             {
                 List<TransactionDTO> transactionsDTOList = new List<TransactionDTO>();
-                List<Data.Models.Transaction> transactionList = _unitOfWork.GetContext().Transactions.Where(a => a.Id != null).ToList();
+                List<Data.Models.Transaction> transactionList = _unitOfWork.GetContext().Transactions.ToList();
                 transactionsDTOList = DTOUtil.MapTransactionToDTOList(transactionList);
                 return transactionsDTOList;
             }

@@ -10,5 +10,6 @@ namespace Services.Managers.User
         UserDTO Create(UserDTO newUser);
         UserDTO Update(UserDTO userToUpdate, Guid id);
         UserDTO SoftDelete(Guid id);
+        string Login(string auth);
     }
 }

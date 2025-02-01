@@ -11,6 +11,10 @@ using Services.Managers.User;
 using Services.Managers.Category;
 using Services.Managers.Role;
 using Services.Managers.Transaction;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Presentation
 {
@@ -44,17 +48,65 @@ namespace Presentation
                                       );
             });
 
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<MyLedgerDbContext>()
+                .AddRoles<IdentityRole>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = false;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["AuthSettings:Audience"],
+                    ValidIssuer = Configuration["AuthSettings:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:Key"]))
+                };
+            });
+
             services.AddControllers();
             string? environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-            services.AddSwaggerGen(p =>
+            if (environmentName != null && (environmentName.Equals("Development")))
             {
-                p.SwaggerDoc("v1", new OpenApiInfo { Title = "Ledger API", Version = "v1" });
+                services.AddSwaggerGen(p =>
+                {
+                    p.SwaggerDoc("v1", new OpenApiInfo { Title = "Ledger API", Version = "v1" });
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                p.IncludeXmlComments(xmlPath);
-            });
+                    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                    p.IncludeXmlComments(xmlPath);
+
+                    p.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                    {
+                        Description = "Please insert your JWT Token into field",
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.ApiKey,
+                        In = ParameterLocation.Header,
+                        Scheme = "Bearer",
+                        BearerFormat = "JWT"
+                    });
+                    p.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                        {
+                            new OpenApiSecurityScheme{
+                                Reference = new OpenApiReference{
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[]{}
+                        }
+                    });
+                });
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -74,6 +126,8 @@ namespace Presentation
             app.UseRouting();
 
             app.UseCors("AllowAll");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
