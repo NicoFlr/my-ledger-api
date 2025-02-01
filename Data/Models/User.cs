@@ -17,6 +17,8 @@ public partial class User
 
     public Guid RoleId { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual Role Role { get; set; } = null!;
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();

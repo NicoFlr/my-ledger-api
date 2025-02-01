@@ -41,7 +41,7 @@ public partial class MyLedgerDbContext : DbContext
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile($"appsettings.{environmentName}.json", true, true);
             IConfigurationRoot configuration = builder.Build();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("SurveySQLDatabase"));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("LedgerSQLDatabase"));
         }
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -74,7 +74,6 @@ public partial class MyLedgerDbContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Transaction_Category");
         });
 

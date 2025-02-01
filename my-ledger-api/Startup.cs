@@ -8,6 +8,9 @@ using Serilog;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Services.Managers.User;
+using Services.Managers.Category;
+using Services.Managers.Role;
+using Services.Managers.Transaction;
 
 namespace Presentation
 {
@@ -25,6 +28,9 @@ namespace Presentation
             services.AddDbContext<MyLedgerDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("LedgerSQLDatabase")));
             services.AddScoped<UnitOfWork, UnitOfWork>(p => new UnitOfWork(new MyLedgerDbContext()));
+            services.AddTransient<ICategoryManager, CategoryManager>();
+            services.AddTransient<IRoleManager, RoleManager>();
+            services.AddTransient<ITransactionManager, TransactionManager>();
             services.AddTransient<IUserManager, UserManager>();
 
 
@@ -55,7 +61,7 @@ namespace Presentation
         {
             Log.Information("Ledger Settings file loaded: " + "appsettings." + env.EnvironmentName + ".json");
 
-            var builder = new SqlConnectionStringBuilder(Configuration["ConnectionStrings:ClientDatabase"]);
+            var builder = new SqlConnectionStringBuilder(Configuration["ConnectionStrings:LedgerSQLDatabase"]);
 
             Log.Information("Ledger connection string to DB: " + builder.DataSource + " Database: " + builder.InitialCatalog);
 

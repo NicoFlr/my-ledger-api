@@ -13,9 +13,9 @@ public partial class Transaction
 
     public bool IsBill { get; set; }
 
-    public Guid CategoryId { get; set; }
+    public Guid? CategoryId { get; set; }
 
-    public virtual Category Category { get; set; } = null!;
+    public virtual Category? Category { get; set; }
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }
