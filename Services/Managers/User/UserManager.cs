@@ -108,6 +108,7 @@ namespace Services.Managers.User
                     _unitOfWork.UserRepository.Detach(foundUser);
                     Data.Models.User updatedUser = DTOUtil.MapUserDTO(user);
                     updatedUser.Id = id;
+                    updatedUser.Password = foundUser.Password;
                     _unitOfWork.UserRepository.Update(updatedUser);
                     _unitOfWork.Save();
 
