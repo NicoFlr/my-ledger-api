@@ -32,12 +32,12 @@ namespace Services.Managers.User
             {
                 Data.Models.User user = new Data.Models.User();
                 user = DTOUtil.MapUserDTO(newUser);
-                user.Password = HashPassword(user.Password, out var salt);
+                user.Password = HashPassword(newUser.Password, out var salt);
                 string saltString = Convert.ToHexString(salt);
                 user.Password = user.Password + "|" + saltString;
                 _unitOfWork.UserRepository.Add(user);
                 _unitOfWork.Save();
-                UserDTO userDTO = DTOUtil.MapUserToDTO(user);
+                UserDTO userDTO = Get(user.Id);
                 return userDTO;
             }
             catch (SystemException)
@@ -111,7 +111,7 @@ namespace Services.Managers.User
                     _unitOfWork.UserRepository.Update(updatedUser);
                     _unitOfWork.Save();
 
-                    UserDTO userDTO = DTOUtil.MapUserToDTO(updatedUser);
+                    UserDTO userDTO = Get(updatedUser.Id);
                     return userDTO;
                 }
                 else
@@ -138,7 +138,7 @@ namespace Services.Managers.User
                     _unitOfWork.UserRepository.Update(foundUser);
                     _unitOfWork.Save();
 
-                    UserDTO userDTO = DTOUtil.MapUserToDTO(foundUser);
+                    UserDTO userDTO = Get(foundUser.Id);
                     return userDTO;
                 }
                 else

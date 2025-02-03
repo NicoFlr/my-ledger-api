@@ -109,7 +109,7 @@ namespace Services.Managers.Category
                 {
                     List<Data.Models.Transaction> transactionsWithCategory = new List<Data.Models.Transaction>();
                     transactionsWithCategory = _unitOfWork.GetContext().Transactions.Where(t => t.CategoryId != null && t.CategoryId.Equals(id)).ToList();
-                    if(!transactionsWithCategory.IsNullOrEmpty())
+                    if(transactionsWithCategory.Count > 0)
                     {
                         foreach(Data.Models.Transaction transactionWithCategoryToDelete in transactionsWithCategory)
                         {
