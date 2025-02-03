@@ -156,7 +156,26 @@ namespace Services.DTOModels
                 transactionDTO.Category = MapCategoryToDTO(transaction.Category);
             }
 
-            if(transaction.Users != null)
+            return transactionDTO;
+        }
+
+        public static TransactionDTO MapTransactionToDTOWithUsers(Transaction transaction)
+        {
+            TransactionDTO transactionDTO = new TransactionDTO();
+
+            transactionDTO.Id = transaction.Id;
+            transactionDTO.Money = transaction.Money;
+            transactionDTO.DateTime = transaction.DateTime;
+            transactionDTO.IsBill = transaction.IsBill;
+            transactionDTO.CategoryId = transaction.CategoryId;
+
+
+            if (transaction.Category != null)
+            {
+                transactionDTO.Category = MapCategoryToDTO(transaction.Category);
+            }
+
+            if (transaction.Users != null)
             {
                 transactionDTO.Users = MapUserToDTOList(transaction.Users.ToList());
             }

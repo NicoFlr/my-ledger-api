@@ -66,7 +66,7 @@ namespace Services.Managers.User
         {
             try
             {
-                Data.Models.User? user = _unitOfWork.GetContext().Users.Include(u=>u.Role).Where(a => a.Id == Id && a.IsDeleted == false).FirstOrDefault();
+                Data.Models.User? user = _unitOfWork.GetContext().Users.Include(u=>u.Role).Include(u=>u.Transactions).Where(a => a.Id == Id && a.IsDeleted == false).FirstOrDefault();
                 if (user != null)
                 {
                     UserDTO userDTO = DTOUtil.MapUserToDTO(user);
