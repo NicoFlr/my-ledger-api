@@ -11,8 +11,8 @@ using Services.Managers.User;
 using Services.Managers.Category;
 using Services.Managers.Role;
 using Services.Managers.Transaction;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+//using Microsoft.AspNetCore.Identity;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -48,7 +48,7 @@ namespace Presentation
                                       );
             });
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            /*services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<MyLedgerDbContext>()
                 .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders();
@@ -71,7 +71,7 @@ namespace Presentation
                     ValidIssuer = Configuration["AuthSettings:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:Key"]))
                 };
-            });
+            });*/
 
             services.AddControllers();
             string? environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -127,7 +127,7 @@ namespace Presentation
 
             app.UseCors("AllowAll");
 
-            app.UseAuthentication();
+            //app.UseAuthentication();
 
             app.UseAuthorization();
 

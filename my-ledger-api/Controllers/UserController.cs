@@ -44,7 +44,7 @@ namespace Presentation.Controllers
         /// </remarks>
         /// <response code="200">All Users were returned succesfully</response>
         /// <response code="500">No Users were found</response>
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpGet]
         public List<UserDTO> getAllUsers()
         {
@@ -102,7 +102,7 @@ namespace Presentation.Controllers
         /// <param name="User"></param>
         /// <response code="200">The User was created succesfully</response>
         /// <response code="500">User could not be created</response>
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPost]
         public UserDTO CreateUser(UserDTO User)
         {
@@ -133,7 +133,7 @@ namespace Presentation.Controllers
         /// <param name="id"></param>
         /// <response code="200">The User was updated succesfully</response>
         /// <response code="500">User could not be updated</response>
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPut]
         [Route("{id}")]
         public UserDTO UpdateUser(UserDTO User, Guid id)
@@ -190,7 +190,7 @@ namespace Presentation.Controllers
         /// <param name="id"></param>
         /// <response code="200">The User was deleted succesfully</response>
         /// <response code="500">User could not be deleted</response>
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpDelete]
         [Route("{id}")]
         public UserDTO SoftDeleteUser(Guid id)
