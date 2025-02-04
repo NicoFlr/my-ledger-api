@@ -1,4 +1,5 @@
 ﻿using Data.Exceptions;
+using Data.Models;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Services.DTOModels;
@@ -29,6 +30,36 @@ namespace Services.Managers.Transaction
                 _unitOfWork.TransactionRepository.Add(transaction);
                 _unitOfWork.Save();
                 TransactionDTO transactionDTO = DTOUtil.MapTransactionToDTO(transaction);
+                return transactionDTO;
+            }
+            catch (SystemException)
+            {
+                throw new NoContentException("Transaction with specified Id was not found.");
+            }
+        }
+
+        public TransactionDTO CreateForUser(TransactionDTO newTransaction,Guid userId)
+        {
+            try
+            {
+                Data.Models.Transaction transaction = new Data.Models.Transaction();
+                transaction = DTOUtil.MapTransactionDTO(newTransaction);
+                _unitOfWork.TransactionRepository.Add(transaction);
+                _unitOfWork.Save();
+                TransactionDTO transactionDTO = DTOUtil.MapTransactionToDTO(transaction);
+
+                Data.Models.User? foundUser = _unitOfWork.GetContext().Users.Include(u=>u.Transactions).Where(a => a.Id == userId).FirstOrDefault();
+                if (foundUser != null)
+                {
+                    foundUser.Transactions.Add(transaction);
+                    _unitOfWork.UserRepository.Update(foundUser);
+                    _unitOfWork.Save();
+                }
+                else
+                {
+                    throw new EntityNotFoundError("The user with the specified Id was not found.");
+                }
+
                 return transactionDTO;
             }
             catch (SystemException)

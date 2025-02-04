@@ -14,5 +14,6 @@ namespace Services.Managers.Transaction
         TransactionDTO Create(TransactionDTO newTransaction);
         TransactionDTO Update(TransactionDTO transactionToUpdate, Guid id);
         TransactionDTO Delete(Guid id);
+        TransactionDTO CreateForUser(TransactionDTO newTransaction, Guid userId);
     }
 }

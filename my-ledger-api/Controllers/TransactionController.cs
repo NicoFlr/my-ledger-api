@@ -113,6 +113,31 @@ namespace Presentation.Controllers
             return _transactionManager.Create(Transaction);
         }
 
+
+        /// <summary>
+        /// Creates a Transaction for a given user
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     {
+        ///        "money": 0.5,
+        ///        "dateTime": "2025-01-22T11:36:41.468-04:00",
+        ///        "isBill": true,
+        ///        "categoryId": "85ab9918-007b-4804-aeef-0e7f99d54a4c"
+        ///     }
+        /// </remarks>
+        /// <param name="Transaction"></param>
+        /// <param name="id"></param>
+        /// <response code="200">The Transaction was created succesfully</response>
+        /// <response code="500">Transaction could not be created</response>
+        [HttpPost]
+        [Route("users/{id}")]
+        public TransactionDTO CreateTransactionForUser(TransactionDTO Transaction, Guid id)
+        {
+            return _transactionManager.CreateForUser(Transaction, id);
+        }
+
         /// <summary>
         /// Update a Transaction by Id
         /// </summary>
