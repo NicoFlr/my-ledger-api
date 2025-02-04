@@ -104,3 +104,10 @@ There are two ways to start the project, from the Visual Studio IDE or CLI.
 * "**LedgerSQLDatabase**" => Connection string to the SQL Database for the appropriate environment.
 * "**MainOrganizerRoleId**" and "**StaffRoleId**" => id's in the Database of the Main Organizer and Staff organization roles, in the OrganizationRole table. 
 * "**AccessExpireMinutes**" => How long a users session can last without any activity
+
+
+## 🔼 Deployment to Azure
+
+This API currently hosted on Microsoft Azure, and can be accessed via the following link: https://my-ledger-api.azurewebsites.net
+
+If you want to deploy the project as a static-web-page on Azure, you can follow the [official documentation](https://learn.microsoft.com/en-us/azure/static-web-apps/get-started-portal?tabs=vanilla-javascript&pivots=github)
